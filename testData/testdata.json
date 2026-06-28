@@ -1,0 +1,32 @@
+[
+    {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "student",
+        "password": "Password123",
+        "expectedResult": "success"
+    },
+    {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "STUDENT",
+        "password": "Password123",
+        "expectedResult": "fail"
+    },
+    {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "student",
+        "password": "Password",
+        "expectedResult": "fail"
+    },
+    {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "  ",
+        "password": "Password123",
+        "expectedResult": "fail"
+    },
+    {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "$%",
+        "password": "  ",
+        "expectedResult": "fail"
+    }
+]

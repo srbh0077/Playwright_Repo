@@ -1,0 +1,36 @@
+npm install -g allure-commandline --save-dev
+- Installs the Allure CLI globally.
+- Provides commands like `allure generate` and `allure open` system-wide.
+- Useful if you want to use Allure from any project or shell.
+
+npm install --save-dev @playwright/test allure-playwright
+- Installs Playwright test runner and Allure reporter as dev dependencies for the current project.
+- Enables integration of Allure reporting in Playwright test suites.
+- Required if you want to generate Allure reports from Playwright tests in this repo.
+
+npm install -D allure-playwright
+- Installs the Allure Playwright reporter as a devDependency (shorthand for --save-dev).
+- Use this when @playwright/test is already present and you only need the reporter integration for generating Allure results.
+
+Troubleshooting after installing Allure:
+- If `allure` is not recognized, make sure the global npm bin folder is on your PATH.
+- On Windows, close and reopen the terminal after a global install.
+- Use `npx allure` or install `allure-commandline` locally if global CLI causes issues.
+- If `allure` is not recognized after global install, close and reopen the terminal or add npm's global bin folder to your PATH.
+- Run `allure --version` to verify the installation.
+
+
+
+npm uninstall -g allure-commandline
+- Uninstalls the globally installed Allure CLI.
+- This does not remove Playwright or the project-level `@playwright/test` and `allure-playwright` dependencies.
+- It only removes the globally installed Allure command-line tool.
+
+npm uninstall --save-dev allure-playwright
+- Removes the Allure Playwright reporter from the current project.
+- Uninstalls the project-level Allure integration used by Playwright tests.
+
+
+https://allurereport.org/docs/playwright/
+
+

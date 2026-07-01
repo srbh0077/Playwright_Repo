@@ -9,8 +9,8 @@ test('Frames', async({browser}) => {
 
     // returns all frame objects[Main page(1) + other frames]
     let frames = await page.frames()
-    
     console.log(frames.length);
+    
     for(let frame of frames) {
         console.log(await frame.title());   // 1st title is of main page
     }
@@ -21,26 +21,32 @@ test.only('Multiple ways to handle frames', async({browser}) => {
     let page = await context.newPage()
 
     await page.goto('https://ui.vision/demo/iframes')
-
+    await page.waitForLoadState('load')
 
 // Get frame using the framelocator()
     let frameRadio = await page.frameLocator(`//iframe[contains(@src, 'embedded=true')]`).getByLabel('I am a human')
-    await frameRadio.check()
+    await frameRadio.click()
     
     await expect(await frameRadio.isChecked()).toBeTruthy()
+    await expect(frameRadio).toBeChecked();
     console.log('I am a human radio button is checked: ', await frameRadio.isChecked());
 
-// Get frame using frame's URL
-    const frame = await page.frame({ url: 'https://forum.ocr.space//embed/topics?discourse_embed_id=de-ulaykf8jy&allow_create=true&template=complete&per_page=3' });
-    let frameBtn = await frame.locator('span.new-topic-btn__text')
+// Get frame using frame({url}), it is synchronous and returns a frame object avoid await
+    const frameFound = page.frame( { url: /.*forum\.ocr\.space.*/ } );
+
+    if (!frameFound) {
+        throw new Error("Target iframe not found! Check if the URL pattern matches.");
+    }
+
+    let frameBtn = await frameFound.locator('span.new-topic-btn__text')
     const [newTab] = await Promise.all([
-                                context.waitForEvent('page'),
+                                page.waitForEvent('popup'),
                                 frameBtn.click()
                             ])
 
-    await newTab.fill('#login-account-name', 'infinity')
+    await newTab.locator('#login-account-name').fill('infinity')
     await newTab.keyboard.press('Tab')
-    await newTab.fill('Password')
+    await newTab.keyboard.insertText('Password')
 
 // Get frame using contentFrame() [ISSUE need to be addressed]
     // let frame2 = await page.locator('#de-ulaykf8jy').contentFrame()

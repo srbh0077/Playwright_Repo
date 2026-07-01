@@ -42,10 +42,11 @@ test.only('Dialogs handling via PAGE.ON()', async({context, page}) => {
 
     // on(event, listerner callback ()) Dialog handler should written before the action happens
     page.on('dialog', async(dialog) => {
+        await expect(dialog.type()).toMatch(/alert|confirm|prompt/i)
 
+        const message = dialog.message();
+        console.log('Alert message:', message);
         if(dialog.type() == 'alert' || dialog.type() == 'confirm') {
-            const message = dialog.message();
-            console.log('Alert message:', message);
             // Use a regex with the | (OR) pipe operator
             await expect(message).toMatch(/alert box!|Press a button!/i)
                     //OR//
@@ -55,8 +56,11 @@ test.only('Dialogs handling via PAGE.ON()', async({context, page}) => {
             await dialog.accept()
         }
         else if(dialog.type() == 'prompt') {
+            await expect(dialog.defaultValue()).toBe('Harry Potter')
+            console.log('Default value in Prompt popup:', await dialog.defaultValue());
+            await expect(message).toContain("Please enter your name")
+
             if(dialog.defaultValue() == name) {
-                console.log('Default value in Prompt popup:', await dialog.defaultValue());
                 await dialog.accept(dialog.defaultValue())
             }
             else {
@@ -73,7 +77,7 @@ test.only('Dialogs handling via PAGE.ON()', async({context, page}) => {
     // toContainText() Ensures the Locator points to an element that contains the given text.
 
     await page.getByRole('button', {name: 'Prompt Alert'}).click()
-    console.log('Text present in Prompt:', await page.locator('#demo').textContent());
+    console.log('Text updated in Prompt:', await page.locator('#demo').textContent());
     await expect( page.locator('#demo')).toHaveText(`Hello ${name}! How are you today?`)
     // toBe() Compares value with expected by calling Object (similer strict equality operator ===)
 })

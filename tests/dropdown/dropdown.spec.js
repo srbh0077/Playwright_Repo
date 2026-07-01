@@ -1,7 +1,7 @@
 import {expect, test} from '@playwright/test'
 
 // priority - label > value > index
-test.only('Single select Dropdown', async({page}) => {
+test('Single select Dropdown', async({page}) => {
     await page.goto('https://demoapps.qspiders.com/ui/dropdown?sublist=0')
 
     await page.locator('#select3').selectOption({label: 'India'})    // select via value
@@ -43,6 +43,17 @@ test.only('Single select Dropdown', async({page}) => {
 
 test('Multi select Dropdown', async({page}) => {
     await page.goto('https://demoapps.qspiders.com/ui/dropdown/multiSelect?sublist=1')
+
+    const allOptions = await page.locator(`#select-multiple-native option`) // returns an element locator
+
+    console.log(`Previous: Found ${await allOptions.count()} options for Multi-select dropdown`); // as count() is immediate method
+    await expect(allOptions).toHaveCount(20)    // toHaveCount() can be only used with Locator object not Array[]
+    console.log(`Later: Found ${await allOptions.count()} options for Multi-select dropdown`);
+                                //OR//
+    const options = await page.$$('#select-multiple-native option')  // as $$ is async method return [] of elements
+    console.log(`Found ${options.length} options for Multi-select dropdown`);
+    await expect(options).toHaveLength(20)    // toHaveLength() can be only used with Array[] not Locator object
+    await expect(options.length).toBe(20)
 
     // select via [{value1}, {value2}...]
     await page.locator('#select-multiple-native').selectOption([{value: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops'}, {value: 'Mens Casual Slim Fit'}])
@@ -95,11 +106,10 @@ test('Custom Dropdown', async({page}) => {
 })
 
 
-test('Dynamic/Auto-suggestion Dropwown', async({page}) => {
+test.only('Dynamic/Auto-suggestion Dropwown', async({page}) => {
     await page.goto('https://www.amazon.in/')
 
     await page.locator('#twotabsearchtextbox').fill('tshirt')
-    await page.waitForTimeout(1500)
 
     await page.waitForSelector(`(//div[@class = 's-suggestion-container'])[1]`)   //1st element
     let options = await page.locator(`//div[@class = 's-suggestion-container']`).all()
@@ -115,14 +125,16 @@ test('Dynamic/Auto-suggestion Dropwown', async({page}) => {
             break;
         }
     }
-    await page.waitForTimeout(3000)
+    //await page.waitForTimeout(3000)
 
     // Approch 2 vis keyboard action
+    await page.waitForLoadState('load')
+    //await page.locator('#twotabsearchtextbox').waitFor( {state: 'visible'} )
     await page.locator('#twotabsearchtextbox').fill('tshirt')
 
     await page.waitForSelector(`(//div[@class = 's-suggestion-container'])[1]`)   //1st element
     await page.keyboard.press('ArrowDown')
-    await page.waitForTimeout(1500)
+    // await page.waitForTimeout(1500)
     await page.keyboard.press('Enter')
-    await page.waitForTimeout(1500)
+    // await page.waitForTimeout(1500)
 })

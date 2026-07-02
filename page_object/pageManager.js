@@ -4,6 +4,7 @@ import signup from './signup.page.js'
 import signin from './signin.page.js'
 import home from './home.page.js'
 import createTicket from './createTicket.page.js'
+import viewTicket from './viewTicke.page.js'
 
 // export class PageManager {
 //   constructor(page) {
@@ -24,6 +25,7 @@ export class PageManager {
     this._signinPage = undefined;
     this._homePage = undefined;
     this._createTicketPage = undefined;
+    this._viewTicketPage = undefined;
   }
 
   get landingPage() {
@@ -44,6 +46,10 @@ export class PageManager {
 
   get createTicketPage() {
     return this._createTicketPage ??= new createTicket(this.page);
+  }
+
+  get viewTicketPage() {
+    return this._viewTicketPage ??= new viewTicket(this.page);
   }
 }
 

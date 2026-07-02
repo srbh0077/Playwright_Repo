@@ -15,7 +15,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -38,18 +38,20 @@ export default defineConfig({
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    /* actionTimeout: Max time for each action (e.g., click, fill) in milliseconds. Priority: Medium */
     actionTimeout: 5000,
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'https://www.w3schools.com/js/js_datatypes.asp',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-first-failure',
+    trace: 'on',
     screenshot:'on-first-failure',
     // video:'retain-on-failure-and-retries',
     permissions:['notifications','geolocation','microphone','camera'],
-
   },
-
+  
+  /* timeout: Max time for each test in milliseconds. Priority: High */
+  // timeout: 1000,
   /* Configure projects for major browsers */
   projects: [
     {

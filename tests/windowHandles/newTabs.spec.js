@@ -23,7 +23,7 @@ test('New Tab', async({browser}) => {
     // }
 })
 
-test('Handle Multiple Tabs', async({browser}) => {
+test.only('Handle Multiple Tabs', async({browser}) => {
     let context = await browser.newContext()
     let page = await context.newPage()
 
@@ -33,16 +33,31 @@ test('Handle Multiple Tabs', async({browser}) => {
                             page.waitForEvent('popup'), 
                             page.locator('//a[text()="Contact us"]').click()
                         ])
-    await newTab.waitForTimeout(1500)
+    // await newTab.waitForTimeout(1500)
+    await newTab.waitForLoadState('load')
     console.log(await newTab.url())
 
     await expect(page.url()).not.toBe(newTab.url())
 
     await newTab.click('#account_dd')
     await newTab.waitForTimeout(1500)
+    
+    // can perform action on parent tab even focused on newTab
+    // another way to switch to new tab without Promise.all()
+    const page1Promise = context.waitForEvent('page');
+    await page.getByRole('link', {name: 'Help'}).click( {button: 'left', clickCount: 1, delay: 1000} );
+    const helpTab = await page1Promise;
+
+    await helpTab.waitForLoadState('networkidle')
+
+    let helpFrame = helpTab.locator(`//iframe[contains(@src, 'www.redbus.in/help')]`).contentFrame()
+    await helpFrame.getByRole('button', {name: 'Login to your account'} ).click()
+
+    // Bring the Main Tab back to the Front (Visual Focus)
+    await page.bringToFront()
 })
 
-test.only('Multiple Windows handle', async({browser}) => {
+test('Multiple Windows handle', async({browser}) => {
     let context = await browser.newContext()
     let page = await context.newPage()
 

@@ -11,7 +11,7 @@ test.skip('Demo Test3', async() => {
     console.log('test 1');
 })
 
-test.only('Only This test should run', async({page}) => {
+test('Only This test should run', async({page}) => {
     // Run only this test and ignore all others in this file
     console.log('Only annotation used');
 })
@@ -22,6 +22,13 @@ test.fail('Failing this scenario', async({page}) => {
     await page.goto('efe4343fds');
 });
 
+test('check will test fil or not', async ({browserName, page}) => {
+    console.log("Happy Happy");
+    if(browserName === 'chromium') {    // chromium -> fail, firefox/webkit -> pass
+        test.fail();
+    }
+})
+
 test.fixme('fix the provide Scenario', async({page}) => {
     // Mark this test as fixme; it will be skipped until it is fixed
     console.log('fixme annotation');
@@ -29,11 +36,12 @@ test.fixme('fix the provide Scenario', async({page}) => {
 })
 
 // Combined annotation example: slow and fail used together
-test.slow('Slow and failing scenario', async({page}) => {
-    test.slow();
-    test.fail();
-    console.log('slow + fail annotation');
-    await page.goto('invalid-url');
+test.only('Slow and failing scenario', async({page}) => {
+    test.slow();    // in config timeout: 1000 added,
+    test.fail();    // passed even after assertion failed
+    await page.goto('https://google.com')
+    await page.waitForTimeout(1000); // Just to make it slow
+    await expect(page.url()).toBe('https://facebook.com'); // Fails
 });
 
 test('Conditional Skip', async({browserName}) => {

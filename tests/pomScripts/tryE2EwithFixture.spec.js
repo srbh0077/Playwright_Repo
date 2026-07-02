@@ -54,7 +54,7 @@ test.describe('Data driven multiple testing', () =>
       await pageManager.signinPage.signinMail.fill(dynamicEmail)
       await pageManager.signinPage.signinPassword.fill(data.password)
       await pageManager.signinPage.loginButton.click()
-      await context.storageState()
+      // await context.storageState()
 
       await expect(pageManager.homePage.greeting).toContainText('Welcome')
       await expect(pageManager.homePage.user).toContainText(data.name)
@@ -67,7 +67,16 @@ test.describe('Data driven multiple testing', () =>
       await pageManager.createTicketPage.sendButton.click()
 
       await pageManager.homePage.viewTicketLink.click()
-      await pageManager.landingPage.page.screenshot({ path: `./screenshot/${dynamicScreenshot}.png` })
+      await pageManager.page.screenshot({ path: `./screenshot/${dynamicScreenshot}.png` })
+      await pageManager.page.screenshot({ path: `./screenshot/${dynamicScreenshot}_fullpage.png`, fullPage: true })
+      
+
+      const ticketText = await pageManager.viewTicketPage.createdTicket.textContent()
+      if(ticketText.includes(data.subject)) {
+        await pageManager.viewTicketPage.createdTicket.screenshot( { path: `./screenshot/${dynamicScreenshot}_TicketCreated.png`} )
+      } else {
+        console.log(`Ticket with subject "${data.subject}" not found.`)
+      }
     })
   }
 })

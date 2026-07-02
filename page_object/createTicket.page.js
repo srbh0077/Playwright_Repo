@@ -1,5 +1,6 @@
 class createTicket {
     constructor(page) {
+        this.page = page
         this.subject = page.locator('#subject')
         this.tasktypeDD = page.locator(`//select[@name = 'tasktype']`)
         this.priorityDD = page.locator(`//select[@name = 'priority']`)

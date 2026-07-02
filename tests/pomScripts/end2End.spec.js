@@ -5,6 +5,7 @@ import signup from '../../page_object/signup.page.js'
 import signin from '../../page_object/signin.page.js'
 import home from '../../page_object/home.page.js'
 import createTicket from '../../page_object/createTicket.page.js'
+import viewTicket from '../../page_object/viewTicke.page.js'
 
 import testdata from "../../testData/end2End.json"
 
@@ -37,6 +38,7 @@ test.describe('Data driven multiple testing', () =>
             let signinPage = new signin(page)
             let homePage = new home(page)
             let createTicketPage = new createTicket(page)
+            let viewTicketPage = new viewTicket(page)
 
             const dynamicEmail = generateDynamicEmail();
             const dynamicScreenShot = generatedynamicScreenShot();
@@ -93,6 +95,14 @@ test.describe('Data driven multiple testing', () =>
             await homePage.viewTicketLink.click()
             //take screenshot and complete assertion
             await page.screenshot({ path: `./screenshot/${dynamicScreenShot}.png` })  // png
+            await page.screenshot({ path: `./screenshot/${dynamicScreenShot}_fullpage.png`, fullPage: true })
+
+            const createdTicketText = await viewTicketPage.createdTicket.textContent()
+            if(createdTicketText.includes(data.subject)) {
+                await viewTicketPage.createdTicket.screenshot( { path: `./screenshot/${dynamicScreenShot}_TicketCreated.png`} )
+            } else {
+                console.log(`Ticket with subject "${data.subject}" not found.`)
+            }
         })
     }
 })

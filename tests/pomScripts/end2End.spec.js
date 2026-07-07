@@ -76,6 +76,8 @@ test.describe('Data driven multiple testing', () =>
             // assert user with message
             await expect(homePage.greeting).toContainText('Welcome');
             await expect(homePage.user).toContainText(data.name)
+            console.log(await homePage.getGreetingText(data.name));
+            
             //click on Create Ticket tab
             await homePage.createTicketLink.click()
 

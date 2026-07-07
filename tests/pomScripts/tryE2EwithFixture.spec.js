@@ -58,6 +58,8 @@ test.describe('Data driven multiple testing', () =>
 
       await expect(pageManager.homePage.greeting).toContainText('Welcome')
       await expect(pageManager.homePage.user).toContainText(data.name)
+
+      console.log(await pageManager.homePage.getGreetingText(data.name));
       await pageManager.homePage.createTicketLink.click()
 
       await pageManager.createTicketPage.subject.fill(data.subject)

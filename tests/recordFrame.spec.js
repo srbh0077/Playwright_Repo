@@ -11,3 +11,4 @@ test('test', async ({ page }) => {
   await page1.locator('iframe').contentFrame().locator('iframe[name="a-clp8v81r22cu"]').contentFrame().getByRole('checkbox', { name: 'I\'m not a robot' }).click();
   await page1.locator('iframe').contentFrame().getByRole('button', { name: 'Generate OTP' }).click();
 });
+
